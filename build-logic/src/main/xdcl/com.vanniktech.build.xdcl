@@ -1,0 +1,9 @@
+plugin {
+  displayName "gradle-maven-publish-plugin build logic"
+  description "Project types and settings blocks for building gradle-maven-publish-plugin."
+  reactions [
+    :com.vanniktech.buildlogic.KotlinJvmLibraryReaction
+    :com.vanniktech.buildlogic.KotlinGradlePluginReaction
+    :com.vanniktech.buildlogic.BuildSettingsReaction
+  ]
+}

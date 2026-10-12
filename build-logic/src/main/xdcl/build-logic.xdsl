@@ -1,0 +1,119 @@
+// Project types and settings blocks for building gradle-maven-publish-plugin itself.
+package com.vanniktech.buildlogic
+
+import xdcl.gradle.bootstrap
+
+// ── dependencies ──────────────────────────────────────────────────────────────
+
+/// A single dependency, written in one of three forms:
+///
+///     implementation [
+///       :okhttp.client,                       // alias in gradle/libs.versions.toml
+///       "org.example:lib:1.0",                // module coordinates
+///       { project ":central-portal" }         // project of this build, by path
+///     ]
+type DependencyNotation = String | Symbol | ProjectDependency
+
+/// A dependency on another project of this build.
+record ProjectDependency {
+  /// The target project's Gradle path, e.g. ":central-portal".
+  project: String
+}
+
+/// Dependencies of a Kotlin/JVM library, by configuration.
+record LibraryDependencies {
+  api: [DependencyNotation]?
+  implementation: [DependencyNotation]?
+  compileOnly: [DependencyNotation]?
+  runtimeOnly: [DependencyNotation]?
+  testImplementation: [DependencyNotation]?
+  testRuntimeOnly: [DependencyNotation]?
+}
+
+/// Dependencies of a Gradle plugin project, by configuration.
+record GradlePluginDependencies {
+  api: [DependencyNotation]?
+  implementation: [DependencyNotation]?
+  compileOnly: [DependencyNotation]?
+  runtimeOnly: [DependencyNotation]?
+  testImplementation: [DependencyNotation]?
+  testRuntimeOnly: [DependencyNotation]?
+  /// Visible to the `integrationTest` source set only, on top of `testImplementation`.
+  integrationTestImplementation: [DependencyNotation]?
+  /// Lint checks run by the Android lint plugin.
+  lintChecks: [DependencyNotation]?
+}
+
+// ── project types ─────────────────────────────────────────────────────────────
+
+/// A published Kotlin/JVM library following this build's conventions: explicit API, ABI
+/// validation, Dokka, and publishing driven by Gradle properties.
+template KotlinJvmLibrary {
+  kotlinJvmLibrary {
+    dependencies: LibraryDependencies?
+  }
+}
+
+/// One plugin the project registers with `java-gradle-plugin`.
+record GradlePluginDeclaration {
+  id: String
+  implementationClass: String
+  displayName: String
+  description: String
+}
+
+/// Android lint settings.
+record Lint {
+  /// Baseline file, relative to the project.
+  baseline: String?
+  ignoreTestSources: Bool = false
+  warningsAsErrors: Bool = false
+  /// Issue ids to disable.
+  disable: [String]?
+}
+
+/// The generated `BuildConfig` class.
+record BuildConfig {
+  packageName: String
+  /// Extra String constants for the main source set, by name.
+  fields: [String: String]?
+}
+
+/// A published Gradle plugin following this build's conventions: everything a
+/// [KotlinJvmLibrary] has, plus `java-gradle-plugin`, Android lint, a generated `BuildConfig`
+/// and an `integrationTest` suite that runs against the plugin published to Maven local.
+template KotlinGradlePlugin {
+  kotlinGradlePlugin {
+    dependencies: GradlePluginDependencies?
+    /// Plugins to register, keyed by declaration name.
+    plugins: [String: GradlePluginDeclaration]
+    lint: Lint?
+    buildConfig: BuildConfig
+    /// Directory for the Dokka HTML publication, relative to the root project.
+    dokkaHtmlOutputDirectory: String?
+    /// Paths of other projects that `integrationTest` needs published to Maven local.
+    integrationTestPublishedProjects: [String]?
+    /// Extra paths deleted by `clean`, relative to the root project.
+    extraCleanPaths: [String]?
+  }
+}
+
+// ── settings ──────────────────────────────────────────────────────────────────
+
+/// Build scan settings.
+record Develocity {
+  termsOfUseUrl: String
+  termsOfUseAgree: String
+  /// Publish build scans only when the `CI` environment variable is set.
+  publishOnlyOnCi: Bool = false
+}
+
+/// Settings-level configuration the bootstrap schema has no block for.
+extension BuildSettings for Settings {
+  buildSettings {
+    /// Additional version catalogs: name to TOML file, relative to the root directory.
+    versionCatalogs: [String: String]?
+    featurePreviews: [String]?
+    develocity: Develocity?
+  }
+}

@@ -67,6 +67,18 @@
       depNameTemplate: 'gradle',
       datasourceTemplate: 'gradle-version',
     },
+    // Build logic dependencies are literal coordinates, XDCL files are not covered by the gradle manager.
+    {
+      customType: 'regex',
+      managerFilePatterns: [
+        '/build-logic/.*\\.gradle\\.xdcl$/',
+      ],
+      matchStrings: [
+        '"(?<depName>[^":\\s]+:[^":\\s]+):(?<currentValue>[^":\\s]+)"',
+      ],
+      datasourceTemplate: 'maven',
+      registryUrlTemplate: 'https://plugins.gradle.org/m2/',
+    },
     // Update .java-version file with the latest JDK version.
     {
       customType: 'regex',

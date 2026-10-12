@@ -1,0 +1,22 @@
+kotlinJvmLibrary {
+  dependencies {
+    implementation [
+      :okhttp.client,
+      :retrofit,
+      :retrofit.converter.scalars,
+      :retrofit.converter.moshi,
+      :slf4j.api,
+      :moshi,
+      :moshi.kotlin
+    ]
+    testImplementation [
+      :junit.jupiter,
+      :junit.engine,
+      :junit.launcher,
+      :truth,
+      :slf4j.api,
+      :okhttp.mockwebserver
+    ]
+    testRuntimeOnly [:slf4j.simple]
+  }
+}
