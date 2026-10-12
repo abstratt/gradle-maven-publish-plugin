@@ -8,7 +8,7 @@ is a final test that publishing generally works with the new release.
  1. Make sure `CHANGELOG.md` is up-to-date on `main` for the impeding release.
  2. `git tag -a X.Y.X-rc1 -m "Version X.Y.Z Release Candidate 1"` (where X.Y.Z is the new version)
  3. `git push --tags`
- 4. Update `libs.versions.toml` to use `X.Y.X-rc1`
+ 4. Update `libs.versions.toml` and `build-logic/build.gradle.xdcl` to use `X.Y.X-rc1`
  5. `git commit -am "Update to X.Y.X-rc1"`
  6. `dependency-watch await com.vanniktech:gradle-maven-publish-plugin:X.Y.X-rc1 && git push`
  7. Wait for snapshot to be published successfully

@@ -1,0 +1,14 @@
+xdclGradlePluginKotlin {
+  dependencies {
+    // Keep these versions in sync with gradle/libs.versions.toml.
+    implementation [
+      "org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.21",
+      "org.jetbrains.dokka:dokka-gradle-plugin:2.2.0",
+      "com.vanniktech:gradle-maven-publish-plugin:0.37.0",
+      "com.github.gmazzo.buildconfig:com.github.gmazzo.buildconfig.gradle.plugin:6.1.2",
+      "com.android.lint:com.android.lint.gradle.plugin:9.4.1",
+      "com.gradle:develocity-gradle-plugin:4.6.0",
+      "org.gradle.toolchains.foojay-resolver-convention:org.gradle.toolchains.foojay-resolver-convention.gradle.plugin:1.0.0"
+    ]
+  }
+}

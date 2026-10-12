@@ -1,0 +1,27 @@
+settings {
+  pluginManagement {
+    includedBuilds ["build-logic"]
+    repositories [:mavenCentral, "https://dl.google.com/dl/android/maven2/", :gradlePluginPortal]
+  }
+  plugins [
+    { id "com.vanniktech.build" }
+  ]
+  dependencyResolutionManagement {
+    repositories [:mavenCentral, "https://dl.google.com/dl/android/maven2/", :gradlePluginPortal]
+  }
+  rootProject { name "gradle-maven-publish-plugin" }
+  include ["plugin", "central-portal"]
+  buildSettings {
+    versionCatalogs [
+      alpha: "gradle/alpha.versions.toml",
+      beta: "gradle/beta.versions.toml",
+      rc: "gradle/rc.versions.toml"
+    ]
+    featurePreviews ["STABLE_CONFIGURATION_CACHE", "NO_IMPLICIT_LOOKUP_IN_PARENT_PROJECTS"]
+    develocity {
+      termsOfUseUrl "https://gradle.com/terms-of-service"
+      termsOfUseAgree "yes"
+      publishOnlyOnCi true
+    }
+  }
+}
